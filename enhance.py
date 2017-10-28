@@ -58,11 +58,11 @@ class Enhancer:
                 annotation_xml = open(os.path.join(self.annotation_path, annotation_file), 'r')
                 tree = ET.parse(annotation_xml)
                 root = tree.getroot()
-
+                intitial_annotation_count = len(root)
                 # For each bb-annotation in annotation:
                 patches = []
                 heatmaps = []
-                i = 0
+                padding = 0
                 for annotation in root.findall('./object'):
                     xmin = int(annotation.find('./bndbox/xmin').text)
                     ymin = int(annotation.find('./bndbox/ymin').text)
@@ -84,23 +84,42 @@ class Enhancer:
                     heat_map = temp
 
                     # Retain only valid Annotations
-                    i+=1
                     if np.max(heat_map) > 200:
+                        # Binary Map
                         heat_map[heat_map > 0] = 1
-                        im2, contours, hierarchy = cv2.findContours(heat_map, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                        for contour in contours:
-                            print cv2.contourArea(contour)
-                            rect = cv2.boundingRect(contour)
-                            x, y, w, h = rect
-                            print rect
-                        print i, '-->', len(contours)
-                        print ' '
 
-                        heatmaps.append(heat_map)
+                        # Flood filling it
+                        im_floodfill = heat_map.copy()
+                        h, w = im_floodfill.shape[:2]
+                        mask = np.zeros((h + 2, w + 2), np.uint8)
+                        cv2.floodFill(im_floodfill, mask, (0, 0), 255)
+                        im_floodfill_inv = cv2.bitwise_not(im_floodfill)
+                        heat_map = heat_map | im_floodfill_inv
+
+                        # Rejecting again if the number of disconnected components are > 3
+                        im2, contours, hierarchy = cv2.findContours(heat_map, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                        if len(contours) >= 3:
+                            heatmaps.append(np.zeros((2, 2)))
+                            root.remove(annotation)
+                        else:
+                            boundingBoxes = [cv2.boundingRect(c) for c in contours]
+                            (cnts, boundingBoxes) = zip(*sorted(zip(contours, boundingBoxes), key=lambda b: b[1][0], reverse=False))
+                            x, y, w, h = boundingBoxes[0]
+                            xmin = int(x + padding) if int(x + padding) < w else w
+                            ymin = int(y + padding) if int(y + padding) < h else h
+                            xmax = int(x + w + padding) if int(x + w + padding) < w else w
+                            ymax = int(y + h + padding) if int(y + h + padding) < h else h
+
+                            annotation.find('./bndbox/xmin').text = xmin
+                            annotation.find('./bndbox/ymin').text = ymin
+                            annotation.find('./bndbox/xmax').text = xmax
+                            annotation.find('./bndbox/ymax').text = ymax
+
+                            heatmaps.append(heat_map)
                     else:
                         heatmaps.append(np.zeros((2,2)))
-
-
+                        root.remove(annotation)
+                print intitial_annotation_count, ' has been reduced to ', len(root)
 
                 # self._display_images(patches)
                 self._display_images(heatmaps)
