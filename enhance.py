@@ -130,7 +130,7 @@ class Enhancer:
                 # Plot annotation
                 p = PlotAnnotation(self.img_path, self.dest_annotation_path, file_name)
                 p.plot_annotation()
-                p.save_annotated_image('/home/joseph/enhanced_annotatedimage.png')
+                p.save_annotated_image('./data/annotated_images/enhanced_' + file_name + '.png')
 
                 file_count += 1
                 print 'Done with: ', file_count
