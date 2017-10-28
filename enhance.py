@@ -132,7 +132,7 @@ class Enhancer:
                 p.save_annotated_image('/home/joseph/enhanced_annotatedimage.png')
 
                 # self._display_images(patches)
-                self._display_images(heatmaps)
+                # self._display_images(heatmaps)
 
 if __name__ == '__main__':
     np.set_printoptions(threshold='nan')
