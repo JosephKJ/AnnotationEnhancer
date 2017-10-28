@@ -64,7 +64,7 @@ class Enhancer:
                 # For each bb-annotation in annotation:
                 patches = []
                 heatmaps = []
-                padding = 2
+                padding = 5
                 for annotation in root.findall('./object'):
                     xmin = int(annotation.find('./bndbox/xmin').text)
                     ymin = int(annotation.find('./bndbox/ymin').text)
@@ -106,12 +106,14 @@ class Enhancer:
                             root.remove(annotation)
                         else:
                             boundingBoxes = [cv2.boundingRect(c) for c in contours]
-                            (cnts, boundingBoxes) = zip(*sorted(zip(contours, boundingBoxes), key=lambda b: b[1][0], reverse=False))
-                            x, y, w, h = boundingBoxes[0]
-                            xmin_tight = int(xmin + x + padding) if int(x + padding) < map_w else xmin + map_w
-                            ymin_tight = int(ymin + y + padding) if int(y + padding) < map_h else xmin + map_h
+                            contour_area = [cv2.contourArea(c) for c in contours]
+                            index = np.argmax(contour_area)
+                            x, y, w, h = boundingBoxes[index]
+
+                            xmin_tight = int(xmin + x - padding) if int(x - padding) > 0 else xmin
+                            ymin_tight = int(ymin + y - padding) if int(y - padding) > 0 else ymin
                             xmax_tight = int(xmin + x + w + padding) if int(x + w + padding) < map_w else xmin + map_w
-                            ymax_tight = int(ymin + y + h + padding) if int(y + h + padding) < map_h else xmin + map_h
+                            ymax_tight = int(ymin + y + h + padding) if int(y + h + padding) < map_h else ymin + map_h
 
                             annotation.find('./bndbox/xmin').text = str(xmin_tight)
                             annotation.find('./bndbox/ymin').text = str(ymin_tight)
@@ -125,7 +127,7 @@ class Enhancer:
 
                 # Write back the annotation
                 tree.write(os.path.join(self.dest_annotation_path, annotation_file))
-                print intitial_annotation_count, ' annotations has been reduced to ', len(root)
+                print intitial_annotation_count-len(root), ' annotations removed.'
 
                 # Plot annotation
                 p = PlotAnnotation(self.img_path, self.dest_annotation_path, file_name)
