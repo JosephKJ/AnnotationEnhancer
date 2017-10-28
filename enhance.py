@@ -106,15 +106,15 @@ class Enhancer:
                             boundingBoxes = [cv2.boundingRect(c) for c in contours]
                             (cnts, boundingBoxes) = zip(*sorted(zip(contours, boundingBoxes), key=lambda b: b[1][0], reverse=False))
                             x, y, w, h = boundingBoxes[0]
-                            xmin = int(x + padding) if int(x + padding) < w else w
-                            ymin = int(y + padding) if int(y + padding) < h else h
-                            xmax = int(x + w + padding) if int(x + w + padding) < w else w
-                            ymax = int(y + h + padding) if int(y + h + padding) < h else h
+                            xmin_tight = int(xmin + x + padding) if int(x + padding) < w else w
+                            ymin_tight = int(ymin + y + padding) if int(y + padding) < h else h
+                            xmax_tight = int(xmin + x + w + padding) if int(x + w + padding) < w else w
+                            ymax_tight = int(ymin + y + h + padding) if int(y + h + padding) < h else h
 
-                            annotation.find('./bndbox/xmin').text = xmin
-                            annotation.find('./bndbox/ymin').text = ymin
-                            annotation.find('./bndbox/xmax').text = xmax
-                            annotation.find('./bndbox/ymax').text = ymax
+                            annotation.find('./bndbox/xmin').text = str(xmin_tight)
+                            annotation.find('./bndbox/ymin').text = str(ymin_tight)
+                            annotation.find('./bndbox/xmax').text = str(xmax_tight)
+                            annotation.find('./bndbox/ymax').text = str(ymax_tight)
 
                             heatmaps.append(heat_map)
                     else:
