@@ -88,6 +88,7 @@ class Enhancer:
                     if np.max(heat_map) > 200:
                         # Binary Map
                         heat_map[heat_map > 0] = 1
+                        map_h, map_w = heat_map.shape
 
                         # Flood filling it
                         im_floodfill = heat_map.copy()
@@ -106,10 +107,10 @@ class Enhancer:
                             boundingBoxes = [cv2.boundingRect(c) for c in contours]
                             (cnts, boundingBoxes) = zip(*sorted(zip(contours, boundingBoxes), key=lambda b: b[1][0], reverse=False))
                             x, y, w, h = boundingBoxes[0]
-                            xmin_tight = int(xmin + x + padding) if int(x + padding) < w else w
-                            ymin_tight = int(ymin + y + padding) if int(y + padding) < h else h
-                            xmax_tight = int(xmin + x + w + padding) if int(x + w + padding) < w else w
-                            ymax_tight = int(ymin + y + h + padding) if int(y + h + padding) < h else h
+                            xmin_tight = int(xmin + x + padding) if int(x + padding) < map_w else xmin + map_w
+                            ymin_tight = int(ymin + y + padding) if int(y + padding) < map_h else xmin + map_h
+                            xmax_tight = int(xmin + x + w + padding) if int(x + w + padding) < map_w else xmin + map_w
+                            ymax_tight = int(ymin + y + h + padding) if int(y + h + padding) < map_h else xmin + map_h
 
                             annotation.find('./bndbox/xmin').text = str(xmin_tight)
                             annotation.find('./bndbox/ymin').text = str(ymin_tight)
