@@ -26,7 +26,7 @@ class PlotAnnotation:
         plt.show()
 
     def save_annotated_image(self, filename):
-        cv2.imwrite(filename + ".png", self.image)
+        cv2.imwrite(filename, cv2.cvtColor(self.image, cv2.COLOR_RGB2BGR))
 
     def _assert_path(self, path, error_message):
         assert os.path.exists(path), error_message
@@ -68,4 +68,5 @@ if __name__ == '__main__':
     annotation_path = os.path.join('../data/annotations')
     p = PlotAnnotation(img_db_path, annotation_path, 'bookstore_video0_5130')
     p.plot_annotation()
-    p.display_annotated_image()
+    # p.display_annotated_image()
+    p.save_annotated_image('/Users/josephkj/Desktop/annotatedimage.png')
