@@ -2,10 +2,11 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
-
+from lib.map import HeatMap
 
 class Enhancer:
     def __init__(self, path_to_images, path_to_annotations, path_to_enhanced_annotations, img_file_extension='jpg'):
+        self.heatmap_obj = HeatMap()
         self.img_path = path_to_images
         self.annotation_path = path_to_annotations
         self.dest_annotation_path = path_to_enhanced_annotations
@@ -68,6 +69,12 @@ class Enhancer:
                     # Crop the patch
                     patch = image[ymin:ymax, xmin:xmax]
                     patches.append(patch)
+
+                    # Get the objectness
+                    heat_map = self.heatmap_obj.get_map(patch)
+                    self._display_image(heat_map)
+                    break
+
                 self._display_images(patches)
 
         # For each bb-annotation in annotation, crop the patch, get the objectness, check retention criteria,
