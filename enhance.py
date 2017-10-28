@@ -1,10 +1,10 @@
 import os
 import cv2
+import numpy as np
 import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
 from lib.map import HeatMap
-import numpy as np
-
+from lib.plot_annotation import PlotAnnotation
 
 class Enhancer:
     def __init__(self, path_to_images, path_to_annotations, path_to_enhanced_annotations, img_file_extension='jpg'):
@@ -125,6 +125,11 @@ class Enhancer:
                 # Write back the annotation
                 tree.write(os.path.join(self.dest_annotation_path, annotation_file))
                 print intitial_annotation_count, ' annotations has been reduced to ', len(root)
+
+                # Plot annotation
+                p = PlotAnnotation(self.img_path, self.dest_annotation_path, file_name)
+                p.plot_annotation()
+                p.save_annotated_image('/home/joseph/enhanced_annotatedimage.png')
 
                 # self._display_images(patches)
                 self._display_images(heatmaps)
