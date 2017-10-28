@@ -63,7 +63,7 @@ class Enhancer:
                 # For each bb-annotation in annotation:
                 patches = []
                 heatmaps = []
-                padding = 0
+                padding = 2
                 for annotation in root.findall('./object'):
                     xmin = int(annotation.find('./bndbox/xmin').text)
                     ymin = int(annotation.find('./bndbox/ymin').text)

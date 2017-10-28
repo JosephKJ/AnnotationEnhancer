@@ -65,9 +65,9 @@ class PlotAnnotation:
 
 if __name__ == '__main__':
     img_db_path = os.path.join('./data/images')
-    annotation_path = os.path.join('./data/enhanced_annotations')
+    annotation_path = os.path.join('./data/annotations')
     img_name = 'bookstore_video0_5130'
     p = PlotAnnotation(img_db_path, annotation_path, img_name)
     p.plot_annotation()
     # p.display_annotated_image()
-    p.save_annotated_image('/home/joseph/enhanced_annotatedimage.png')
+    p.save_annotated_image('/home/joseph/original_annotation.png')
