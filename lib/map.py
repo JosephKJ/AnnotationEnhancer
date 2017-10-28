@@ -18,17 +18,17 @@ class HeatMap:
 
         # Loading the caffe model
         if arch == 'CaffeNet':
-            model_def = os.path.join('../model/caffenet_deploy_conv_only.prototxt')
-            model_weights = os.path.join('../model/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel')
+            model_def = os.path.join(os.path.dirname(__file__), '../model/caffenet_deploy_conv_only.prototxt')
+            model_weights = os.path.join(os.path.dirname(__file__), '../model/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel')
         elif arch == 'VGG16':
-            model_def = os.path.join('../model/VGG_ILSVRC_16_layers_conv_only.prototxt')
-            model_weights = os.path.join('../model/VGG_ILSVRC_16_layers.caffemodel')
+            model_def = os.path.join(os.path.dirname(__file__), '../model/VGG_ILSVRC_16_layers_conv_only.prototxt')
+            model_weights = os.path.join(os.path.dirname(__file__), '../model/VGG_ILSVRC_16_layers.caffemodel')
         elif arch == 'ResNet-50':
-            model_def = os.path.join('../model/ResNet-50-deploy.prototxt')
-            model_weights = os.path.join('../model/ResNet-50-model.caffemodel')
+            model_def = os.path.join(os.path.dirname(__file__), '../model/ResNet-50-deploy.prototxt')
+            model_weights = os.path.join(os.path.dirname(__file__), '../model/ResNet-50-model.caffemodel')
         elif arch == 'ResNet-101':
-            model_def = os.path.join('../model/ResNet-101-deploy.prototxt')
-            model_weights = os.path.join('../model/ResNet-101-model.caffemodel')
+            model_def = os.path.join(os.path.dirname(__file__), '../model/ResNet-101-deploy.prototxt')
+            model_weights = os.path.join(os.path.dirname(__file__), '../model/ResNet-101-model.caffemodel')
 
         self.net = caffe.Net(model_def, model_weights, caffe.TEST)
         self.arch = arch
