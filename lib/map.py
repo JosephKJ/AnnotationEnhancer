@@ -33,8 +33,9 @@ class HeatMap:
         self.net = caffe.Net(model_def, model_weights, caffe.TEST)
         self.arch = arch
 
-    def get_map(self, image, verbose=False, layer_name='res3a'):
+    def get_map(self, image, verbose=False):
 
+        image = scipy.misc.imresize(image, 8.0, interp='bicubic')
         image_shape = image.shape
 
         # Image Pre-processing
@@ -55,15 +56,15 @@ class HeatMap:
         elif self.arch == 'VGG16':
             feat = net.blobs['conv5_3'].data[0]
         elif self.arch == 'ResNet-50':
-            feat = net.blobs[layer_name].data[0]
+            feat = net.blobs['res3a'].data[0]
         elif self.arch == 'ResNet-101':
-            feat = net.blobs[layer_name].data[0]
+            feat = net.blobs['res3a'].data[0]
 
         # Generating the mask
         feature_sum = np.sum(feat, axis=0)
         np.set_printoptions(threshold='nan')
         feature_sum = (255 * (feature_sum - np.min(feature_sum)) / np.ptp(feature_sum)).astype(int)
-        threshold = feature_sum.mean()+20
+        threshold = feature_sum.mean()
         feature_sum = np.ma.masked_where(feature_sum <= threshold, feature_sum)
 
         # Scaling the map to the input image size.
