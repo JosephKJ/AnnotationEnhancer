@@ -60,6 +60,7 @@ class Enhancer:
 
                 # For each bb-annotation in annotation:
                 patches = []
+                heatmaps = []
                 for annotation in root.findall('./object'):
                     xmin = int(annotation.find('./bndbox/xmin').text)
                     ymin = int(annotation.find('./bndbox/ymin').text)
@@ -72,10 +73,10 @@ class Enhancer:
 
                     # Get the objectness
                     heat_map = self.heatmap_obj.get_map(patch)
-                    self._display_image(heat_map)
-                    break
+                    heatmaps.append(heat_map)
 
                 self._display_images(patches)
+                self._display_images(heatmaps)
 
         # For each bb-annotation in annotation, crop the patch, get the objectness, check retention criteria,
         #   make BB tight, add to the annotation list.
