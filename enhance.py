@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from lib.map import HeatMap
 import numpy as np
 
+
 class Enhancer:
     def __init__(self, path_to_images, path_to_annotations, path_to_enhanced_annotations, img_file_extension='jpg'):
         self.heatmap_obj = HeatMap()
@@ -119,15 +120,13 @@ class Enhancer:
                     else:
                         heatmaps.append(np.zeros((2,2)))
                         root.remove(annotation)
-                print intitial_annotation_count, ' has been reduced to ', len(root)
+
+                # Write back the annotation
+                tree.write(os.path.join(self.dest_annotation_path, annotation_file))
+                print intitial_annotation_count, ' annotations has been reduced to ', len(root)
 
                 # self._display_images(patches)
                 self._display_images(heatmaps)
-
-        # For each bb-annotation in annotation, crop the patch, get the objectness, check retention criteria,
-        #   make BB tight, add to the annotation list.
-        # Write back the annotation
-        pass
 
 if __name__ == '__main__':
     np.set_printoptions(threshold='nan')
