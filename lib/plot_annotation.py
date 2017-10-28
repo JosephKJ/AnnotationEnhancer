@@ -64,8 +64,8 @@ class PlotAnnotation:
             self._draw_on_img(xmin, ymin, xmax, ymax, label)
 
 if __name__ == '__main__':
-    img_db_path = os.path.join('../data/images')
-    annotation_path = os.path.join('../data/enhanced_annotations')
+    img_db_path = os.path.join('./data/images')
+    annotation_path = os.path.join('./data/enhanced_annotations')
     img_name = 'bookstore_video0_5130'
     p = PlotAnnotation(img_db_path, annotation_path, img_name)
     p.plot_annotation()
