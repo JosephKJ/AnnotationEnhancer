@@ -4,6 +4,7 @@ import numpy as np
 import os
 import scipy
 
+import _init_path
 import caffe
 
 caffe_root = os.path.join(os.path.dirname(__file__), '..', '..', 'caffe')
