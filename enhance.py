@@ -44,6 +44,7 @@ class Enhancer:
 
     def enhance(self):
         # Read each annotation
+        file_count = 0
         for annotation_file in os.listdir(self.annotation_path):
             if os.path.isfile(os.path.join(self.annotation_path, annotation_file)):
 
@@ -130,6 +131,9 @@ class Enhancer:
                 p = PlotAnnotation(self.img_path, self.dest_annotation_path, file_name)
                 p.plot_annotation()
                 p.save_annotated_image('/home/joseph/enhanced_annotatedimage.png')
+
+                file_count += 1
+                print 'Done with: ', file_count
 
                 # self._display_images(patches)
                 # self._display_images(heatmaps)
