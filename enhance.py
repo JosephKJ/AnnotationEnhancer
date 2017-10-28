@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
 from lib.map import HeatMap
+import numpy as np
 
 class Enhancer:
     def __init__(self, path_to_images, path_to_annotations, path_to_enhanced_annotations, img_file_extension='jpg'):
@@ -61,6 +62,7 @@ class Enhancer:
                 # For each bb-annotation in annotation:
                 patches = []
                 heatmaps = []
+                i = 0
                 for annotation in root.findall('./object'):
                     xmin = int(annotation.find('./bndbox/xmin').text)
                     ymin = int(annotation.find('./bndbox/ymin').text)
@@ -73,7 +75,32 @@ class Enhancer:
 
                     # Get the objectness
                     heat_map = self.heatmap_obj.get_map(patch)
-                    heatmaps.append(heat_map)
+                    heat_map = heat_map.data * ~heat_map.mask
+
+                    # Remove the border in the detections
+                    border = 2
+                    temp = np.zeros_like(heat_map)
+                    temp[border:-border, border:-border] = heat_map[border:-border, border:-border]
+                    heat_map = temp
+
+                    # Retain only valid Annotations
+                    i+=1
+                    if np.max(heat_map) > 200:
+                        heat_map[heat_map > 0] = 1
+                        im2, contours, hierarchy = cv2.findContours(heat_map, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                        for contour in contours:
+                            print cv2.contourArea(contour)
+                            rect = cv2.boundingRect(contour)
+                            x, y, w, h = rect
+                            print rect
+                        print i, '-->', len(contours)
+                        print ' '
+
+                        heatmaps.append(heat_map)
+                    else:
+                        heatmaps.append(np.zeros((2,2)))
+
+
 
                 # self._display_images(patches)
                 self._display_images(heatmaps)
@@ -84,9 +111,11 @@ class Enhancer:
         pass
 
 if __name__ == '__main__':
+    np.set_printoptions(threshold='nan')
     img_db_path = os.path.join('./data/images')
     annotation_path = os.path.join('./data/annotations')
     dest_annotation_path = os.path.join('./data/enhanced_annotations')
 
     e = Enhancer(img_db_path, annotation_path, dest_annotation_path)
     e.enhance()
+    np.set_printoptions(threshold='nan')
