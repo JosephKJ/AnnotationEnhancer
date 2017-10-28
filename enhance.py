@@ -31,7 +31,7 @@ class Enhancer:
     def _display_images(self, images):
         plt.figure()
         # plt.figure(figsize=(20, 10))
-        columns = 10
+        columns = 5
         for i, image in enumerate(images):
             plt.subplot(len(images) / columns + 1, columns, i + 1)
             frame = plt.gca()
@@ -75,7 +75,7 @@ class Enhancer:
                     heat_map = self.heatmap_obj.get_map(patch)
                     heatmaps.append(heat_map)
 
-                self._display_images(patches)
+                # self._display_images(patches)
                 self._display_images(heatmaps)
 
         # For each bb-annotation in annotation, crop the patch, get the objectness, check retention criteria,

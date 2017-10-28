@@ -64,7 +64,7 @@ class HeatMap:
         feature_sum = np.sum(feat, axis=0)
         np.set_printoptions(threshold='nan')
         feature_sum = (255 * (feature_sum - np.min(feature_sum)) / np.ptp(feature_sum)).astype(int)
-        threshold = feature_sum.mean()
+        threshold = feature_sum.mean()+20
         feature_sum = np.ma.masked_where(feature_sum <= threshold, feature_sum)
 
         # Scaling the map to the input image size.
