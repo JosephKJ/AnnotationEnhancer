@@ -68,7 +68,7 @@ if __name__ == '__main__':
     annotation_path = os.path.join('/home/joseph/Dataset/sdd/Annotations')
     dest_img_path = os.path.join('./data/sdd_scene0_annotation/')
 
-    for i in range(1, 100):
+    for i in range(1, 13333):
         img_name = 'bookstore_video0_' + str(i)
         p = PlotAnnotation(img_db_path, annotation_path, img_name)
         p.plot_annotation()
