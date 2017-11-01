@@ -64,10 +64,20 @@ class PlotAnnotation:
             self._draw_on_img(xmin, ymin, xmax, ymax, label)
 
 if __name__ == '__main__':
-    img_db_path = os.path.join('./data/images')
-    annotation_path = os.path.join('./data/annotations')
-    img_name = 'bookstore_video0_5130'
-    p = PlotAnnotation(img_db_path, annotation_path, img_name)
-    p.plot_annotation()
-    # p.display_annotated_image()
-    p.save_annotated_image('/home/joseph/original_annotation.png')
+    img_db_path = os.path.join('/home/joseph/Dataset/sdd/JPEGImages')
+    annotation_path = os.path.join('/home/joseph/Dataset/sdd/Annotations')
+    dest_img_path = os.path.join('./data/sdd_scene0_annotation/')
+
+    for i in range(1, 100):
+        img_name = 'bookstore_video0_' + str(i)
+        p = PlotAnnotation(img_db_path, annotation_path, img_name)
+        p.plot_annotation()
+        p.save_annotated_image(dest_img_path + 'enh_' + img_name + '.jpg')
+
+    # img_db_path = os.path.join('./data/images')
+    # annotation_path = os.path.join('./data/annotations')
+    # img_name = 'bookstore_video0_5130'
+    # p = PlotAnnotation(img_db_path, annotation_path, img_name)
+    # p.plot_annotation()
+    # # p.display_annotated_image()
+    # p.save_annotated_image('/home/joseph/original_annotation.png')
