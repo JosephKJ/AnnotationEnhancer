@@ -66,11 +66,11 @@ class PlotAnnotation:
 if __name__ == '__main__':
     img_db_path = os.path.join('/home/joseph/Dataset/vanila_stanford_drone_dataset/sdd_train_test_bookstore/JPEGImages')
     annotation_path = os.path.join('/home/joseph/Dataset/vanila_stanford_drone_dataset/sdd_train_test_bookstore/Annotations')
-    dest_img_path = os.path.join('./data/sdd_scene0_annotation_only_good_annotations/')
+    dest_img_path = os.path.join('./data/sdd_scene0_annotation_only_good_annotations/video0')
 
     # for i in range(1, 13333):
     for f in os.listdir(annotation_path):
-        if os.path.isfile(os.path.join(annotation_path, f)):
+        if os.path.isfile(os.path.join(annotation_path, f)) and f.startswith('bookstore_video0'):
             img_name = f.split('.')[0]
             p = PlotAnnotation(img_db_path, annotation_path, img_name)
             p.plot_annotation()
